@@ -11,7 +11,8 @@ $ ./emo --list | grep horse
 🐴  - horse-face
 🏇  - horse-racing
 $ HORSEFACE=$(./emo -n horse-face)
-$ echo $HORSEFACE 🐴
+$ echo $HORSEFACE
+🐴
 $ 
 ```
 ## Building
