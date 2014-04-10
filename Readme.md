@@ -2,7 +2,7 @@
 
 ## Bring emoji to your UNIX shell
 
-This is a tiny binary you can use to generate unicode emoji glyphs easily at the unix command line using descriptive names
+This is a simple static binary utility program you can use to generate unicode emoji glyphs easily at the unix command line using descriptive names
 
 ```bash
 $ ./emo --list | grep horse
