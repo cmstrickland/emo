@@ -31,6 +31,20 @@ func (e *Emoji) CpByName(name string) (string, bool) {
 	return fmt.Sprintf("%U", cp), ok
 }
 
+func (e *Emoji) OctStringByName(name string, pad_prefix bool) (string, bool) {
+	cp, ok := e.StringByName(name)
+	bytes := []byte(cp)
+	template := "\\%o"
+	if pad_prefix {
+		template = "\\0%o"
+	}
+	var str string
+	for _, b := range bytes {
+		str = str + fmt.Sprintf(template, b)
+	}
+	return str, ok
+}
+
 func (e *Emoji) PrettyPrint(w io.Writer) {
 	var keys []string
 	for k := range e.codes {
