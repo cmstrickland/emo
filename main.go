@@ -10,6 +10,8 @@ func main() {
 
 	var list = flag.Bool("list", false, "List all known emoji")
 	var n = flag.Bool("n", false, "Supress newline")
+	var U = flag.Bool("U", false, "Print code point")
+
 	flag.Parse()
 
 	if *list {
@@ -24,7 +26,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	str, ok := e.ByName(args[0])
+	var str string
+	var ok bool
+	if *U {
+		str, ok = e.CpByName(args[0])
+	} else {
+		str, ok = e.StringByName(args[0])
+	}
 	if ok {
 		if *n == false {
 			str += "\n"

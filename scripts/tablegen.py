@@ -14,11 +14,12 @@ emoticon_match = re.compile('^1F[3456][0-9ABCDEF]{2}')
 
 print """package main
 
-var codepoints = map[string]string{
+var codepoints = map[string]int{
 """
 for line in fileinput.input():
     if emoticon_match.match(line) :
         (cp,desc) = line.split(';')[0:2]
         desc = desc.lower().replace(' ','-')
-        print '\t"{0}" : "\U{1:0>8}",'.format(desc,cp)
+        cp = cp.lower()
+        print '\t"{0}" : 0x{1},'.format(desc,cp)
 print "}"
