@@ -13,6 +13,7 @@ func main() {
 	var U = flag.Bool("U", false, "Print code point")
 	var o = flag.Bool("o", false, "Print octal escapes suitable for echo -e")
 	var O = flag.Bool("O", false, "Print octal escapes suitable for $PS1")
+	var x = flag.Bool("x", false, "Print hex escapes suitable for echo -e")
 	flag.Parse()
 
 	if *list {
@@ -35,6 +36,8 @@ func main() {
 		str, ok = e.OctStringByName(args[0], true)
 	} else if *O {
 		str, ok = e.OctStringByName(args[0], false)
+	} else if *x {
+		str, ok = e.HexStringByName(args[0])
 	} else {
 		str, ok = e.StringByName(args[0])
 	}

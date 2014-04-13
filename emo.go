@@ -31,18 +31,31 @@ func (e *Emoji) CpByName(name string) (string, bool) {
 	return fmt.Sprintf("%U", cp), ok
 }
 
-func (e *Emoji) OctStringByName(name string, pad_prefix bool) (string, bool) {
+func (e *Emoji) bytesByName(name string) ([]byte, bool) {
 	cp, ok := e.StringByName(name)
-	bytes := []byte(cp)
+	return []byte(cp), ok
+}
+
+func (e *Emoji) prettyBytes(template string, bytes []byte) (str string) {
+	for _, b := range bytes {
+		str = str + fmt.Sprintf(template, b)
+	}
+	return str
+}
+
+func (e *Emoji) OctStringByName(name string, pad_prefix bool) (string, bool) {
+	bytes, ok := e.bytesByName(name)
 	template := "\\%o"
 	if pad_prefix {
 		template = "\\0%o"
 	}
-	var str string
-	for _, b := range bytes {
-		str = str + fmt.Sprintf(template, b)
-	}
-	return str, ok
+	return e.prettyBytes(template, bytes), ok
+}
+
+func (e *Emoji) HexStringByName(name string) (string, bool) {
+	bytes, ok := e.bytesByName(name)
+	template := "\\x%x"
+	return e.prettyBytes(template, bytes), ok
 }
 
 func (e *Emoji) PrettyPrint(w io.Writer) {
