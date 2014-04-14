@@ -61,39 +61,16 @@ func (e *Emoji) HexStringByName(name string) (string, bool) {
 }
 
 func (e *Emoji) InterpolateString(s string) (string, bool) {
-	var i int
-	var replacements []string
-	var ok bool = true
-	fmt.Printf("interpolation string [%s]\n", s)
-	for i != -1 {
-		i = strings.Index(s[i:], `\e`)
-		if i > 0 {
-			fmt.Printf("Found marker at %d\n", i)
-			for j, r := range s[i:] {
-				fmt.Printf("%#U:%d\n", r, j)
-				match, err := regexp.MatchString(`\s`, fmt.Sprintf("%c", r))
-				if err != nil {
-					return s, false
-				}
-				if match {
-					ename := s[i : i+j]
-					rep, found := e.StringByName(ename)
-					if found {
-						replacements = append(replacements, ename, rep)
-					} else {
-						ok = false
-					}
-				}
-			}
+	rx := regexp.MustCompile(`\\e[-a-z]+`)
+	matches := rx.FindAllString(s, -1)
+	for _, m := range matches {
+		name := m[2:]
+		em, ok := e.StringByName(name)
+		if ok {
+			s = strings.Replace(s, m, em, 1)
 		}
-		i++
 	}
-	if len(replacements) > 0 {
-		r := strings.NewReplacer(replacements...)
-		s = r.Replace(s)
-		return s, ok
-	}
-	return s, false
+	return s, true
 }
 
 func (e *Emoji) PrettyPrint(w io.Writer) {
