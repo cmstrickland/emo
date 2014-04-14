@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"io"
+	"regexp"
 	"sort"
+	"strings"
 )
 
 type codemap map[string]int
@@ -56,6 +58,42 @@ func (e *Emoji) HexStringByName(name string) (string, bool) {
 	bytes, ok := e.bytesByName(name)
 	template := "\\x%x"
 	return e.prettyBytes(template, bytes), ok
+}
+
+func (e *Emoji) InterpolateString(s string) (string, bool) {
+	var i int
+	var replacements []string
+	var ok bool = true
+	fmt.Printf("interpolation string [%s]\n", s)
+	for i != -1 {
+		i = strings.Index(s[i:], `\e`)
+		if i > 0 {
+			fmt.Printf("Found marker at %d\n", i)
+			for j, r := range s[i:] {
+				fmt.Printf("%#U:%d\n", r, j)
+				match, err := regexp.MatchString(`\s`, fmt.Sprintf("%c", r))
+				if err != nil {
+					return s, false
+				}
+				if match {
+					ename := s[i : i+j]
+					rep, found := e.StringByName(ename)
+					if found {
+						replacements = append(replacements, ename, rep)
+					} else {
+						ok = false
+					}
+				}
+			}
+		}
+		i++
+	}
+	if len(replacements) > 0 {
+		r := strings.NewReplacer(replacements...)
+		s = r.Replace(s)
+		return s, ok
+	}
+	return s, false
 }
 
 func (e *Emoji) PrettyPrint(w io.Writer) {
