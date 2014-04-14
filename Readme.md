@@ -52,4 +52,24 @@ The flag parsing is shonky. Typically only a single flag makes sense
 
 * -n suppress newline ( like echo )
 
-
+## Examples
+```bash
+bash $ ./emo --list | grep grin
+😸 - grinning-cat-face-with-smiling-eyes
+😀 - grinning-face
+😁 - grinning-face-with-smiling-eyes
+bash $ ./emo grinning-face-with-smiling-eyes
+😁
+bash $ ./emo -O grinning-face 
+\360\237\230\200
+bash $ PS1="\360\237\230\200 >"
+😀 >./emo -o grinning-face
+\0360\0237\0230\0200
+😀 >echo -e "\0360\0237\0230\0200" 
+😀
+😀 >./emo -U grinning-cat-face-with-smiling-eyes
+U+1F638
+😀 >./emo -e 'Hello, world! \egrinning-cat-face-with-smiling-eyes !!'
+Hello, world! 😸 !!
+😀 >
+```
