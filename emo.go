@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"io"
+	"regexp"
 	"sort"
+	"strings"
 )
 
 type codemap map[string]int
@@ -56,6 +58,19 @@ func (e *Emoji) HexStringByName(name string) (string, bool) {
 	bytes, ok := e.bytesByName(name)
 	template := "\\x%x"
 	return e.prettyBytes(template, bytes), ok
+}
+
+func (e *Emoji) InterpolateString(s string) (string, bool) {
+	rx := regexp.MustCompile(`\\e[-a-z]+`)
+	matches := rx.FindAllString(s, -1)
+	for _, m := range matches {
+		name := m[2:]
+		em, ok := e.StringByName(name)
+		if ok {
+			s = strings.Replace(s, m, em, 1)
+		}
+	}
+	return s, true
 }
 
 func (e *Emoji) PrettyPrint(w io.Writer) {

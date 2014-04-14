@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	e := NewEmoji()
+	emj := NewEmoji()
 
 	var list = flag.Bool("list", false, "List all known emoji")
 	var n = flag.Bool("n", false, "Supress newline")
@@ -14,10 +14,11 @@ func main() {
 	var o = flag.Bool("o", false, "Print octal escapes suitable for echo -e")
 	var O = flag.Bool("O", false, "Print octal escapes suitable for $PS1")
 	var x = flag.Bool("x", false, "Print hex escapes suitable for echo -e")
+	var e = flag.Bool("e", false, "work like echo, but interpolate \\e as escapes for emoji")
 	flag.Parse()
 
 	if *list {
-		e.PrettyPrint(os.Stdout)
+		emj.PrettyPrint(os.Stdout)
 		os.Exit(0)
 	}
 
@@ -30,16 +31,19 @@ func main() {
 
 	var str string
 	var ok bool
+
 	if *U {
-		str, ok = e.CpByName(args[0])
+		str, ok = emj.CpByName(args[0])
 	} else if *o {
-		str, ok = e.OctStringByName(args[0], true)
+		str, ok = emj.OctStringByName(args[0], true)
 	} else if *O {
-		str, ok = e.OctStringByName(args[0], false)
+		str, ok = emj.OctStringByName(args[0], false)
 	} else if *x {
-		str, ok = e.HexStringByName(args[0])
+		str, ok = emj.HexStringByName(args[0])
+	} else if *e {
+		str, ok = emj.InterpolateString(args[0])
 	} else {
-		str, ok = e.StringByName(args[0])
+		str, ok = emj.StringByName(args[0])
 	}
 	if ok {
 		if *n == false {
