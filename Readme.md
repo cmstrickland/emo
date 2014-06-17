@@ -23,6 +23,10 @@ Requires golang 1.2. Should just build with 'go build'
 
 The code should be portable, however you need a shell interpreter that has a decent unicode locale, and is using a font that has nice glyphs for the Unicode-6 emoji code points. Works well OOTB on my Mac.
 
+## Unicode 7.0
+
+Preliminary support for the new unicode 7.0 code points is on the branch 'unicode-7'
+
 ## Output modes
 
 emo indexes all the emoji it knows about using a normalized name, based on the descriptive name for the code points used by the Unicode charts. These take the form of whitespace separated upper case English strings. emo normalizes these by transforming them to lowercase hyphen separated words.
